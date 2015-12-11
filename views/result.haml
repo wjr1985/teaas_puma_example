@@ -1,0 +1,11 @@
+!!!
+%head
+  = haml :generic_header
+
+%body
+  = haml :nav
+  .container
+    %h1 RESULTS!!!
+    - @result.each do |r|
+      %img(src="data:image/gif;base64,#{r}")
+      %br

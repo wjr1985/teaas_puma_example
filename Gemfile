@@ -1,0 +1,5 @@
+source 'https://rubygems.org'
+gem 'haml'
+gem 'puma'
+gem 'sinatra'
+gem 'teaas'

@@ -1,0 +1,37 @@
+!!!
+= haml :generic_header
+%body
+  = haml :nav
+  %div.container
+    %div.starter
+      %h1 Turbo (or slowmo) Emojis as a Service! (TEaaS)
+
+      %p Want to generate your own turbo or slowmo emoji? Here's the place!
+      Examples of speeds are next to each option. Here's the base image: 
+      %img(src="clap2_1x10.gif")
+      %br
+
+      %h2 LET THE FORM BEGIN!
+      %form(method="POST" action="/turbo" enctype="multipart/form-data")
+        %p Note: File should already be a GIF
+        = haml :upload_button
+        %br
+        %br
+        - [2, 5].each do |i|
+          %input(type="radio" name="turbo" value="#{i}" checked=true)Slowmo - 1x#{i} 
+          %img(src="slowmo_1x#{i}_clap2.gif")
+          %br
+        %br
+        - (2...5).each do |i|
+          %input(type="radio" name="turbo" value="#{i}0")Turbo - 1x#{i}0 
+          %img(src="turbo_1x#{i}0_clap2.gif")
+          %br
+        %br
+
+        %input(type="checkbox" name="allspeeds") Generates ALL turbo and slowmo speeds listed above (ignores selection)
+        %br
+        %input(type="checkbox" name="resize" value="32x32") Resize* the image to attempt to make the filesize smaller.
+        %br
+        %input(type="submit" value="GOGOGOGOGOGOGOGO")
+      %br
+      * The image will be resized to 32x32, but the aspect ratio will be retained, so you may up with an image with dimensions 32x12 or 10x32 for example.
