@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/wjr1985/teaas.git
+  revision: e6ec34240527657ea33ff751c5eb0bd40f95eddb
+  tag: 0.2.4b
+  specs:
+    teaas (0.2.3)
+      rmagick (~> 2.15)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -12,8 +20,6 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
-    teaas (0.2.3)
-      rmagick (~> 2.15)
     tilt (2.0.2)
 
 PLATFORMS
@@ -23,7 +29,7 @@ DEPENDENCIES
   haml
   puma
   sinatra
-  teaas
+  teaas!
 
 BUNDLED WITH
    1.10.6
