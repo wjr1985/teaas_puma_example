@@ -1,7 +1,6 @@
 GIT
   remote: https://github.com/wjr1985/teaas.git
-  revision: a7259d5165e51101b4948ecef17106cd2073413d
-  branch: intensify
+  revision: 8312c946b1e21c80f906428d3c5f54fffe811f55
   specs:
     teaas (1.0.0.bacon)
       rmagick (~> 2.15)
