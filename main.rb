@@ -7,6 +7,10 @@ get '/' do
   haml :index
 end
 
+get '/intensify' do
+  haml :intensify
+end
+
 get '/marquee' do
   haml :marquee
 end
@@ -28,6 +32,21 @@ def turboize(img, turbo)
   img.ticks_per_second = turbo
   img.iterations = 0
   img
+end
+
+post '/intensify' do
+  if valid_input?(params)
+    img_path = params['imagefile'][:tempfile].path
+
+    intensified_image = Teaas::Intensify.intensify_from_file(img_path)
+
+    blob_result = Teaas::Turboize.turbo(intensified_image, params['resize'])
+    @result = blob_result.map { |i| Base64.encode64(i) }
+
+    haml :result
+  else
+    haml :invalid_input
+  end
 end
 
 post '/marquee' do
