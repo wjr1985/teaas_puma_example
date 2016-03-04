@@ -15,6 +15,10 @@ get '/marquee' do
   haml :marquee
 end
 
+get '/pulse' do
+  haml :pulse
+end
+
 get '/spin' do
   haml :spin
 end
@@ -56,6 +60,21 @@ post '/marquee' do
     marquee_image = Teaas::Marquee.marquee_from_file(img_path)
 
     blob_result = Teaas::Turboize.turbo(marquee_image, params['resize'])
+    @result = blob_result.map { |i| Base64.encode64(i) }
+
+    haml :result
+  else
+    haml :invalid_input
+  end
+end
+
+post '/pulse' do
+  if valid_input?(params)
+    img_path = params['imagefile'][:tempfile].path
+
+    spinned_image = Teaas::Pulse.pulse_from_file(img_path)
+
+    blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
     @result = blob_result.map { |i| Base64.encode64(i) }
 
     haml :result
