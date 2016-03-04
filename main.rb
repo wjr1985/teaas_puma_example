@@ -31,6 +31,10 @@ def valid_input?(params)
   params['imagefile'] && params['imagefile'][:type].start_with?('image')
 end
 
+def valid_spin_input?(params)
+  params['rotations'].to_i <= 50 && valid_input?(params)
+end
+
 def turboize(img, turbo)
   img.delay = 1
   img.ticks_per_second = turbo
@@ -101,10 +105,10 @@ post '/turbo' do
 end
 
 post '/spin' do
-  if valid_input?(params)
+  if valid_spin_input?(params)
     img_path = params['imagefile'][:tempfile].path
 
-    spinned_image = Teaas::Spin.spin_from_file(img_path)
+    spinned_image = Teaas::Spin.spin_from_file(img_path, :rotations => params['rotations'].to_i)
 
     blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
     @result = blob_result.map { |i| Base64.encode64(i) }

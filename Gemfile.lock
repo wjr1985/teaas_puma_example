@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/wjr1985/teaas.git
-  revision: 1c7cc8b234eded3b2a7a5068d44aa3c29e526511
+  revision: 360fff63323a09919e2659f9240db8d240b99081
   branch: enhancements_030416
   specs:
     teaas (1.0.0.bacon)

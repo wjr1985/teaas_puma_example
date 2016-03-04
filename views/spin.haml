@@ -13,6 +13,8 @@
         %p Note: File should not be animated (static GIFs are supported)
         = haml :upload_button
         %br
+        %input(type="number" name="rotations" value="4" style="width: 50px;") Number of rotations (default is 4, max 50)
+        %br
         %input(type="checkbox" name="resize" value="32x32") Resize* the image to attempt to make the filesize smaller.
         %br
         %input(type="submit" value="GOGOGOGOGOGOGOGO")
