@@ -3,6 +3,8 @@
 
 An example Heroku app that demonstrates the functionality of [Teaas](https://github.com/wjr1985/teaas). This project will tend to use experimental / testing branches of Teaas - check the `Gemfile` if you're worried about using experimental features. This will run just fine on the Heroku free tier. I use this currently without issue, although it hasn't gone under a ton of heavy load before.
 
+If you want to run it locally for whatever reason, just run `bundle install` then `bundle exec ruby main.rb`.
+
 Uses Bootstrap and HAML templates, and is overall janky and hacky, but it works!
 
 # Questions / PRs
