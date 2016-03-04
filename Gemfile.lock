@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/wjr1985/teaas.git
-  revision: 360fff63323a09919e2659f9240db8d240b99081
-  branch: enhancements_030416
+  revision: 2b91e32d4b99c1583a6b8263f17724e801ea71fa
+  branch: bloodify
   specs:
     teaas (1.0.0.bacon)
       rmagick (~> 2.15)

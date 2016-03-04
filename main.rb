@@ -7,6 +7,10 @@ get '/' do
   haml :index
 end
 
+get '/bloodify' do
+  haml :bloodify
+end
+
 get '/intensify' do
   haml :intensify
 end
@@ -40,6 +44,21 @@ def turboize(img, turbo)
   img.ticks_per_second = turbo
   img.iterations = 0
   img
+end
+
+post '/bloodify' do
+  if valid_input?(params)
+    img_path = params['imagefile'][:tempfile].path
+
+    spinned_image = Teaas::Blood.blood_from_file(img_path)
+
+    blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
+    @result = blob_result.map { |i| Base64.encode64(i) }
+
+    haml :result
+  else
+    haml :invalid_input
+  end
 end
 
 post '/intensify' do
