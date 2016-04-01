@@ -127,7 +127,11 @@ post '/spin' do
   if valid_spin_input?(params)
     img_path = params['imagefile'][:tempfile].path
 
-    spinned_image = Teaas::Spin.spin_from_file(img_path, :rotations => params['rotations'].to_i)
+    options = {}
+    options[:rotations] = params['rotations'].to_i
+    options[:counterclockwise] = true if params['counterclockwise']
+
+    spinned_image = Teaas::Spin.spin_from_file(img_path, options)
 
     blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
     @result = blob_result.map { |i| Base64.encode64(i) }
