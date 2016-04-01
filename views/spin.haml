@@ -9,18 +9,22 @@
       %p Want to generate your own spinny emoji? Here's the place!
 
       %h2 LET THE FORM BEGIN!
-      %form(method="POST" action="/spin" enctype="multipart/form-data")
+      %form.form-horizontal(method="POST" action="/spin" enctype="multipart/form-data")
         %p Note: Unless animate is selected, any GIF will be spun as a static image
         = haml :upload_button
         %br
-        %input(type="number" name="rotations" value="4" style="width: 50px;") Number of rotations (default is 4, max 50)
-        %br
-        %input(type="checkbox" name="counterclockwise" value="true") Spin counterclockwise instead of clockwise
-        %br
-        %input(type="checkbox" name="animate" value="true") Animate the image (if it's a GIF)
-        %br
-        %input(type="checkbox" name="resize" value="32x32") Resize* the image to attempt to make the filesize smaller.
-        %br
-        %input(type="submit" value="GOGOGOGOGOGOGOGO")
-      %br
-      * The image will be resized to 32x32, but the aspect ratio will be retained, so you may up with an image with dimensions 32x12 or 10x32 for example.
+        .form-group.form-inline
+          %select#rotations.form-control(type="number" name="rotations")
+            - (1..50).each do |i|
+              - selected = i == 4 
+              %option(value=i selected=selected)=i
+          %label(for="rotations") Number of rotations
+        .checkbox
+          %label(for="counterclockwise")
+            %input(type="checkbox" id="counterclockwise" name="counterclockwise" value="true") 
+            Spin counterclockwise instead of clockwise
+        .checkbox
+          %label(for="animate")
+            %input(type="checkbox" id="animate" name="animate" value="true")
+            Animate the image (if it's a GIF)
+        = haml :_form_footer
