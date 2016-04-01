@@ -5,12 +5,12 @@ SITE.fileInputs = function() {
       $val = $this.val(),
       valArray = $val.split('\\'),
       newVal = valArray[valArray.length-1],
-      $button = $this.siblings('.button'),
+      $button = $this.siblings('.btn'),
       $fakeFile = $this.siblings('.file-holder');
   if(newVal !== '') {
     $button.text('Image Chosen');
     if($fakeFile.length === 0) {
-      $button.after('<span class="file-holder">' + newVal + '</span>');
+      $button.after('<p class="file-holder help-block">' + newVal + '</p>');
     } else {
       $fakeFile.text(newVal);
     }
