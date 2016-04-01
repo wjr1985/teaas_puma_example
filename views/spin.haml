@@ -27,11 +27,4 @@
           %label(for="animate")
             %input(type="checkbox" id="animate" name="animate" value="true")
             Animate the image (if it's a GIF)
-        .checkbox
-          %label(for="resize")
-            %input(type="checkbox" id="resize" name="resize" value="32x32") 
-            Resize* the image to attempt to make the filesize smaller.
-        %br
-        %input.btn.btn-primary(type="submit" value="GOGOGOGOGOGOGOGO")
-      %br
-      * The image will be resized to 32x32, but the aspect ratio will be retained, so you may up with an image with dimensions 32x12 or 10x32 for example.
+        = haml :_form_footer

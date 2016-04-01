@@ -15,9 +15,4 @@
       %form(method="POST" action="/bloodify" enctype="multipart/form-data")
         %p Note: File should not be animated (static GIFs are supported)
         = haml :upload_button
-        %br
-        %input(type="checkbox" name="resize" value="32x32") Resize* the image to attempt to make the filesize smaller.
-        %br
-        %input(type="submit" value="GOGOGOGOGOGOGOGO")
-      %br
-      * The image will be resized to 32x32, but the aspect ratio will be retained, so you may up with an image with dimensions 32x12 or 10x32 for example.
+        = haml :_form_footer
