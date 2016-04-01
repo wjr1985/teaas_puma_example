@@ -10,12 +10,14 @@
 
       %h2 LET THE FORM BEGIN!
       %form(method="POST" action="/spin" enctype="multipart/form-data")
-        %p Note: File should not be animated (static GIFs are supported)
+        %p Note: Unless animate is selected, any GIF will be spun as a static image
         = haml :upload_button
         %br
         %input(type="number" name="rotations" value="4" style="width: 50px;") Number of rotations (default is 4, max 50)
         %br
-        %input(type="checkbox" name="counterclockwise" value="32x32") Spin counterclockwise instead of clockwise
+        %input(type="checkbox" name="counterclockwise" value="true") Spin counterclockwise instead of clockwise
+        %br
+        %input(type="checkbox" name="animate" value="true") Animate the image (if it's a GIF)
         %br
         %input(type="checkbox" name="resize" value="32x32") Resize* the image to attempt to make the filesize smaller.
         %br

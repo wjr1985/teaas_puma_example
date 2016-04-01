@@ -130,6 +130,7 @@ post '/spin' do
     options = {}
     options[:rotations] = params['rotations'].to_i
     options[:counterclockwise] = true if params['counterclockwise']
+    options[:animate] = true if params['animate']
 
     spinned_image = Teaas::Spin.spin_from_file(img_path, options)
 
