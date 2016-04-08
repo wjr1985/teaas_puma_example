@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/wjr1985/teaas.git
-  revision: af2b2652b3be465f0cf84af02353ea3b4927ba81
+  revision: f9c89b0a63c02513670b26c0d02257ca1ae5e308
   specs:
     teaas (1.0.0.bacon)
       rmagick (~> 2.15)
@@ -31,4 +31,4 @@ DEPENDENCIES
   teaas!
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
