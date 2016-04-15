@@ -13,9 +13,9 @@
         = haml :upload_button
         %br
         .form-group.form-inline
-          %select#rotations.form-control(type="number" name="rotations" disabled="true")
+          %select#rotations.form-control(type="number" name="rotations")
             - (1..50).each do |i|
-              - selected = i == 4
+              - selected = i == 8
               %option(value=i selected=selected)=i
           %label(for="rotations") Number of rotations
         = haml :_form_footer

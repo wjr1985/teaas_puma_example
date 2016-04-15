@@ -1,7 +1,11 @@
+require 'aws-sdk'
 require 'base64'
+require 'dotenv'
 require 'rmagick'
 require 'sinatra'
 require 'teaas'
+
+Dotenv.load
 
 get '/' do
   haml :index
@@ -36,7 +40,7 @@ get '/turbo' do
 end
 
 def valid_input?(params)
-  params['imagefile'] && params['imagefile'][:type].start_with?('image')
+  params['imagefile'] && params['imagefile'][:type].start_with?('image') && File.size(params['imagefile'][:tempfile].path) <= 500000
 end
 
 def valid_spin_input?(params)
@@ -57,9 +61,7 @@ post '/bloodify' do
     spinned_image = Teaas::Blood.blood_from_file(img_path)
 
     blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
-    @result = blob_result.map { |i| Base64.encode64(i) }
-
-    haml :result
+    _process_and_display_results(blob_result)
   else
     haml :invalid_input
   end
@@ -72,9 +74,7 @@ post '/intensify' do
     intensified_image = Teaas::Intensify.intensify_from_file(img_path)
 
     blob_result = Teaas::Turboize.turbo(intensified_image, params['resize'])
-    @result = blob_result.map { |i| Base64.encode64(i) }
-
-    haml :result
+    _process_and_display_results(blob_result)
   else
     haml :invalid_input
   end
@@ -87,9 +87,7 @@ post '/marquee' do
     marquee_image = Teaas::Marquee.marquee_from_file(img_path, :reverse => params['reverse'])
 
     blob_result = Teaas::Turboize.turbo(marquee_image, params['resize'])
-    @result = blob_result.map { |i| Base64.encode64(i) }
-
-    haml :result
+    _process_and_display_results(blob_result)
   else
     haml :invalid_input
   end
@@ -102,9 +100,7 @@ post '/pulse' do
     spinned_image = Teaas::Pulse.pulse_from_file(img_path)
 
     blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
-    @result = blob_result.map { |i| Base64.encode64(i) }
-
-    haml :result
+    _process_and_display_results(blob_result)
   else
     haml :invalid_input
   end
@@ -119,9 +115,7 @@ post '/turbo' do
     else
       blob_result = Teaas::Turboize::turbo_from_file(img_path, params['resize'], [params['turbo'].to_i])
     end
-    @result = blob_result.map { |i| Base64.encode64(i) }
-
-    haml :result
+    _process_and_display_results(blob_result)
   else
     haml :invalid_input
   end
@@ -131,13 +125,11 @@ post '/tumbleweed' do
   if valid_input?(params)
     img_path = params['imagefile'][:tempfile].path
 
-    spin_image = Teaas::Spin.spin_from_file(img_path, :rotations => 4, :animate => true)
+    spin_image = Teaas::Spin.spin_from_file(img_path, :rotations => params['rotations'].to_i, :animate => true)
     marquee_image = Teaas::Marquee.marquee(spin_image)
 
     blob_result = Teaas::Turboize.turbo(marquee_image, params['resize'])
-    @result = blob_result.map { |i| Base64.encode64(i) }
-
-    haml :result
+    _process_and_display_results(blob_result)
   else
     haml :invalid_input
   end
@@ -155,10 +147,28 @@ post '/spin' do
     spinned_image = Teaas::Spin.spin_from_file(img_path, options)
 
     blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
-    @result = blob_result.map { |i| Base64.encode64(i) }
-
-    haml :result
+    _process_and_display_results(blob_result)
   else
     haml :invalid_input
+  end
+end
+
+def _process_and_display_results(blob_result)
+  if ENV['AWS_S3_BUCKET_NAME']
+    @result = _upload_to_s3(blob_result)
+  else
+    @result = blob_result.map { |i| Base64.encode64(i) }
+  end
+
+  haml :result
+end
+
+def _upload_to_s3(blob_result)
+  s3 = Aws::S3::Resource.new
+  bucket = s3.bucket(ENV['AWS_S3_BUCKET_NAME'])
+  blob_result.map do |res|
+    obj = bucket.object("emojis/#{SecureRandom.uuid}.gif")
+    obj.put(:body => res, :acl => 'public-read')
+    obj.public_url
   end
 end
