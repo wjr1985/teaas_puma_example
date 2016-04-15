@@ -1,0 +1,21 @@
+!!!
+= haml :generic_header
+%body
+  = haml :nav
+  .container
+    .starter
+      %h1 Tumbleweed Emojis as a Service! (TEaaS)
+
+      %p Want to generate your own tumbleweed emoji? Here's the place!
+
+      %h2 LET THE FORM BEGIN!
+      %form(method="POST" action="/tumbleweed" enctype="multipart/form-data")
+        = haml :upload_button
+        %br
+        .form-group.form-inline
+          %select#rotations.form-control(type="number" name="rotations")
+            - (1..50).each do |i|
+              - selected = i == 8
+              %option(value=i selected=selected)=i
+          %label(for="rotations") Number of rotations
+        = haml :_form_footer

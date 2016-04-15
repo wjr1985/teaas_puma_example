@@ -27,6 +27,10 @@ get '/spin' do
   haml :spin
 end
 
+get '/tumbleweed' do
+  haml :tumbleweed
+end
+
 get '/turbo' do
   haml :turbo
 end
@@ -115,6 +119,22 @@ post '/turbo' do
     else
       blob_result = Teaas::Turboize::turbo_from_file(img_path, params['resize'], [params['turbo'].to_i])
     end
+    @result = blob_result.map { |i| Base64.encode64(i) }
+
+    haml :result
+  else
+    haml :invalid_input
+  end
+end
+
+post '/tumbleweed' do
+  if valid_input?(params)
+    img_path = params['imagefile'][:tempfile].path
+
+    spin_image = Teaas::Spin.spin_from_file(img_path, :rotations => params['rotations'].to_i, :animate => true)
+    marquee_image = Teaas::Marquee.marquee(spin_image)
+
+    blob_result = Teaas::Turboize.turbo(marquee_image, params['resize'])
     @result = blob_result.map { |i| Base64.encode64(i) }
 
     haml :result
