@@ -131,7 +131,7 @@ post '/tumbleweed' do
   if valid_input?(params)
     img_path = params['imagefile'][:tempfile].path
 
-    spin_image = Teaas::Spin.spin_from_file(img_path, :rotations => params['rotations'].to_i, :animate => true)
+    spin_image = Teaas::Spin.spin_from_file(img_path, :rotations => 4, :animate => true)
     marquee_image = Teaas::Marquee.marquee(spin_image)
 
     blob_result = Teaas::Turboize.turbo(marquee_image, params['resize'])
