@@ -80,7 +80,7 @@ post '/marquee' do
   if valid_input?(params)
     img_path = params['imagefile'][:tempfile].path
 
-    marquee_image = Teaas::Marquee.marquee_from_file(img_path)
+    marquee_image = Teaas::Marquee.marquee_from_file(img_path, :reverse => params['reverse'])
 
     blob_result = Teaas::Turboize.turbo(marquee_image, params['resize'])
     @result = blob_result.map { |i| Base64.encode64(i) }
