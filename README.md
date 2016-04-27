@@ -16,7 +16,7 @@ Questions and/or PRs are more than welcome. If there is a bug when it comes to a
 
 # Credits
 The file upload button is based on this awesome [gist](https://gist.github.com/davist11/645816) by [davist11](https://github.com/davist11).
-Thanks [crookedneighbor](https://github.com/crookedneighbor] for making the interface a lot nicer and other contributions 
+Thanks [crookedneighbor](https://github.com/crookedneighbor) for making the interface a lot nicer and other contributions 
 
 # License
 It's MIT. See the LICENSE file.
