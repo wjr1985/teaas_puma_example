@@ -66,9 +66,9 @@ post '/bloodify' do
   if valid_input?(params)
     img_path = params['imagefile'][:tempfile].path
 
-    spinned_image = Teaas::Blood.blood_from_file(img_path)
+    blood_image = Teaas::Blood.blood_from_file(img_path)
 
-    blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
+    blob_result = _default_turbo(blood_image, params)
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
@@ -79,9 +79,9 @@ post '/fireify' do
   if valid_input?(params)
     img_path = params['imagefile'][:tempfile].path
 
-    spinned_image = Teaas::Fire.fire_from_file(img_path)
+    fire_image = Teaas::Fire.fire_from_file(img_path)
 
-    blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
+    blob_result = _default_turbo(fire_image, params)
     _process_and_display_results(blob_result)
 
     haml :result
@@ -97,7 +97,7 @@ post '/intensify' do
 
     intensified_image = Teaas::Intensify.intensify_from_file(img_path)
 
-    blob_result = Teaas::Turboize.turbo(intensified_image, params['resize'])
+    blob_result = _default_turbo(intensified_image, params)
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
@@ -110,7 +110,7 @@ post '/marquee' do
 
     marquee_image = Teaas::Marquee.marquee_from_file(img_path, :reverse => params['reverse'])
 
-    blob_result = Teaas::Turboize.turbo(marquee_image, params['resize'])
+    blob_result = _default_turbo(marquee_image, params)
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
@@ -123,7 +123,7 @@ post '/parrotify' do
 
     parrotify_image = Teaas::Parrotify.parrotify_from_file(img_path)
 
-    blob_result = Teaas::Turboize.turbo(parrotify_image, params['resize'], [1000], :delay => 40)
+    blob_result = Teaas::Turboize.turbo(parrotify_image, params['resize'], [1000], :delay => 40, :sample => params['sample'])
 
     blob_result << Magick::ImageList.new('public/parrot.gif').to_blob
 
@@ -137,9 +137,9 @@ post '/pulse' do
   if valid_input?(params)
     img_path = params['imagefile'][:tempfile].path
 
-    spinned_image = Teaas::Pulse.pulse_from_file(img_path)
+    pulsed_image = Teaas::Pulse.pulse_from_file(img_path)
 
-    blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
+    blob_result = _default_turbo(pulsed_image, params)
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
@@ -151,9 +151,9 @@ post '/turbo' do
     img_path = params['imagefile'][:tempfile].path
 
     if params['allspeeds']
-      blob_result = Teaas::Turboize::turbo_from_file(img_path, params['resize'])
+      blob_result = Teaas::Turboize::turbo_from_file(img_path, params['resize'], nil, :sample => params['sample'])
     else
-      blob_result = Teaas::Turboize::turbo_from_file(img_path, params['resize'], [params['turbo'].to_i])
+      blob_result = Teaas::Turboize::turbo_from_file(img_path, params['resize'], [params['turbo'].to_i], :sample => params['sample'])
     end
     _process_and_display_results(blob_result)
   else
@@ -168,7 +168,7 @@ post '/tumbleweed' do
     spin_image = Teaas::Spin.spin_from_file(img_path, :rotations => params['rotations'].to_i, :animate => true)
     marquee_image = Teaas::Marquee.marquee(spin_image)
 
-    blob_result = Teaas::Turboize.turbo(marquee_image, params['resize'])
+    blob_result = _default_turbo(marquee_image, params)
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
@@ -186,7 +186,7 @@ post '/spin' do
 
     spinned_image = Teaas::Spin.spin_from_file(img_path, options)
 
-    blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
+    blob_result = _default_turbo(spinned_image, params)
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
@@ -211,4 +211,8 @@ def _upload_to_s3(blob_result)
     obj.put(:body => res, :acl => 'public-read')
     obj.public_url
   end
+end
+
+def _default_turbo(image, params)
+    blob_result = Teaas::Turboize.turbo(image, params['resize'], nil, :sample => params['sample'])
 end

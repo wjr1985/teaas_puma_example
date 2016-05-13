@@ -1,7 +1,26 @@
-.checkbox
-  %label(for="resize")
-    %input(type="checkbox" id="resize" name="resize" value="32x32") 
-    Resize* the image to attempt to make the filesize smaller.
+%h3 Resizing options
+Use these options to attempt to make the filesize of the image smaller.
+.radio
+  .btn-group
+    %label(for="noresize")
+      %input(type="radio" id="noresize" name="resize" value="" checked="checked")
+        Do not resize the image
+    %br
+    %label(for="resize32")
+      %input(type="radio" id="resize32" name="resize" value="32x32")
+        Resize* the image to 32x32
+    %br
+    %label(for="resize64")
+      %input(type="radio" id="resize64" name="resize" value="64x64")
+        Resize* the image to 64x64
+    %br
+    %label(for="resize128")
+      %input(type="radio" id="resize128" name="resize" value="128x128")
+        Resize* the image to 128x128
+  %br
+  %label(for="sample")
+    %input(type="checkbox" id="sample" name="sample" value="sample")
+      Use the sampling method to resize the image. Check this to help reduce the file size even further, with image quality suffering a bit.
 
 %br
 
@@ -9,4 +28,4 @@
 
 %hr
 
-.help-block * The image will be resized to 32x32, but the aspect ratio will be retained, so you may up with an image with dimensions 32x12 or 10x32 for example.
+.help-block * The image will be resized, but the aspect ratio will be retained, so you may up with an image with dimensions 32x12 or 20x64 for example.
