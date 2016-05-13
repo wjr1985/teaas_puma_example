@@ -15,6 +15,10 @@ get '/bloodify' do
   haml :bloodify
 end
 
+get '/fireify' do
+  haml :fireify
+end
+
 get '/intensify' do
   haml :intensify
 end
@@ -66,6 +70,22 @@ post '/bloodify' do
     haml :invalid_input
   end
 end
+
+post '/fireify' do
+  if valid_input?(params)
+    img_path = params['imagefile'][:tempfile].path
+
+    spinned_image = Teaas::Fire.fire_from_file(img_path)
+
+    blob_result = Teaas::Turboize.turbo(spinned_image, params['resize'])
+    _process_and_display_results(blob_result)
+
+    haml :result
+  else
+    haml :invalid_input
+  end
+end
+
 
 post '/intensify' do
   if valid_input?(params)
