@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/wjr1985/teaas.git
-  revision: afb44c021513a12cf8a46545da22d7990f5c7b29
+  revision: c59b54ce91cd7fa2902eb64b26e177a8850209f2
   specs:
     teaas (1.0.0.bacon)
       rmagick (~> 2.15)
@@ -39,6 +39,7 @@ DEPENDENCIES
   dotenv
   haml
   puma
+  rmagick
   sinatra
   teaas!
 

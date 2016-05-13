@@ -27,6 +27,10 @@ get '/marquee' do
   haml :marquee
 end
 
+get '/parrotify' do
+  haml :parrotify
+end
+
 get '/pulse' do
   haml :pulse
 end
@@ -107,6 +111,22 @@ post '/marquee' do
     marquee_image = Teaas::Marquee.marquee_from_file(img_path, :reverse => params['reverse'])
 
     blob_result = Teaas::Turboize.turbo(marquee_image, params['resize'])
+    _process_and_display_results(blob_result)
+  else
+    haml :invalid_input
+  end
+end
+
+post '/parrotify' do
+  if valid_input?(params)
+    img_path = params['imagefile'][:tempfile].path
+
+    parrotify_image = Teaas::Parrotify.parrotify_from_file(img_path)
+
+    blob_result = Teaas::Turboize.turbo(parrotify_image, params['resize'], [1000], :delay => 40)
+
+    blob_result << Magick::ImageList.new('public/parrot.gif').to_blob
+
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
