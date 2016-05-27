@@ -6,6 +6,7 @@ An example Heroku app that demonstrates the functionality of [Teaas](https://git
 If you want to run it locally for whatever reason: 
 
 * [Download ImageMagik](http://www.imagemagick.org/script/binary-releases.php) or `brew install ImageMagik` if you're using [homebrew](http://brew.sh/)
+* Install `libmagic-dev`, which should be available in any package manager, or `brew install libmagic` if using [homebrew](http://brew.sh/)
 * `bundle install`
 * `bundle exec ruby main.rb`.
 
