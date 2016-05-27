@@ -1,11 +1,19 @@
 require 'aws-sdk'
 require 'base64'
 require 'dotenv'
+require 'open-uri'
 require 'rmagick'
 require 'sinatra'
 require 'teaas'
 
+require_relative 'lib/magic_number'
+
 Dotenv.load
+
+# We always want OpenURI to return a tempfile
+# http://stackoverflow.com/questions/694115/why-does-ruby-open-uris-open-return-a-stringio-in-my-unit-test-but-a-fileio-in
+OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
+OpenURI::Buffer.const_set 'StringMax', 0
 
 get '/' do
   haml :index
@@ -51,12 +59,16 @@ get '/turbo' do
   haml :turbo
 end
 
-def valid_input?(params)
+def valid_image_input?(params)
   params['imagefile'] && params['imagefile'][:type].start_with?('image') && File.size(params['imagefile'][:tempfile].path) <= 500000
 end
 
+def valid_url_input?(url)
+  URI.parse(url).kind_of?(URI::HTTP)
+end
+
 def valid_spin_input?(params)
-  params['rotations'].to_i <= 50 && valid_input?(params)
+  params['rotations'].to_i <= 50
 end
 
 def turboize(img, turbo)
@@ -67,9 +79,8 @@ def turboize(img, turbo)
 end
 
 post '/bloodify' do
-  if valid_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path
     blood_image = Teaas::Blood.blood_from_file(img_path)
 
     blob_result = _default_turbo(blood_image, params)
@@ -80,9 +91,8 @@ post '/bloodify' do
 end
 
 post '/fireify' do
-  if valid_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path
     fire_image = Teaas::Fire.fire_from_file(img_path)
 
     blob_result = _default_turbo(fire_image, params)
@@ -95,9 +105,8 @@ post '/fireify' do
 end
 
 post '/gotify' do
-  if valid_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path
     fire_image = Teaas::Got.got_from_file(img_path)
 
     blob_result = _default_turbo(fire_image, params)
@@ -111,9 +120,8 @@ end
 
 
 post '/intensify' do
-  if valid_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path
     intensified_image = Teaas::Intensify.intensify_from_file(img_path)
 
     blob_result = _default_turbo(intensified_image, params)
@@ -124,9 +132,8 @@ post '/intensify' do
 end
 
 post '/marquee' do
-  if valid_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path
     marquee_image = Teaas::Marquee.marquee_from_file(img_path, :reverse => params['reverse'])
 
     blob_result = _default_turbo(marquee_image, params)
@@ -137,9 +144,8 @@ post '/marquee' do
 end
 
 post '/parrotify' do
-  if valid_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path
     parrotify_image = Teaas::Parrotify.parrotify_from_file(img_path)
 
     blob_result = Teaas::Turboize.turbo(parrotify_image, params['resize'], [1000], :delay => 40, :sample => params['sample'])
@@ -153,9 +159,8 @@ post '/parrotify' do
 end
 
 post '/pulse' do
-  if valid_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path
     pulsed_image = Teaas::Pulse.pulse_from_file(img_path)
 
     blob_result = _default_turbo(pulsed_image, params)
@@ -166,9 +171,8 @@ post '/pulse' do
 end
 
 post '/turbo' do
-  if valid_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path
     if params['allspeeds']
       blob_result = Teaas::Turboize::turbo_from_file(img_path, params['resize'], nil, :sample => params['sample'])
     else
@@ -181,9 +185,8 @@ post '/turbo' do
 end
 
 post '/tumbleweed' do
-  if valid_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path
     spin_image = Teaas::Spin.spin_from_file(img_path, :rotations => params['rotations'].to_i, :animate => true)
     marquee_image = Teaas::Marquee.marquee(spin_image)
 
@@ -195,9 +198,8 @@ post '/tumbleweed' do
 end
 
 post '/spin' do
-  if valid_spin_input?(params)
-    img_path = params['imagefile'][:tempfile].path
-
+  img_path = _read_image(params)
+  if img_path && valid_spin_input?(params)
     options = {}
     options[:rotations] = params['rotations'].to_i
     options[:counterclockwise] = true if params['counterclockwise']
@@ -234,4 +236,29 @@ end
 
 def _default_turbo(image, params)
     blob_result = Teaas::Turboize.turbo(image, params['resize'], nil, :sample => params['sample'])
+end
+
+def _read_image(params)
+  img_path = nil
+  if valid_image_input?(params)
+    img_path = params['imagefile'][:tempfile].path
+  elsif valid_url_input?(params['fileurl'])
+    begin
+      file = open(params['fileurl'])
+      if _acceptable_image_type(file.path)
+        img_path = file.path
+      end
+    rescue OpenURI::HTTPError
+    end
+  end
+  img_path
+end
+
+def _acceptable_image_type(path)
+  file = File.open(path, 'rb')
+  header = file.read(4)
+  valid_image = MagicNumber.gif?(header) || MagicNumber.jpg?(header) || MagicNumber.png?(header)
+  file.close
+
+  valid_image
 end

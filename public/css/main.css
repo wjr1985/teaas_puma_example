@@ -39,3 +39,6 @@ input[type=file] {
   padding: 4px 18px;
   text-transform: uppercase;
 }
+input[type=text] {
+  width: 600px;
+}
