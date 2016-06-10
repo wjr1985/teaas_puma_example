@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/wjr1985/teaas.git
-  revision: dfe74b930290ae1af95e82f38bc65cb957871412
+  revision: e9451de98a1902f835171d6bba86c935dada284c
   specs:
     teaas (1.0.0.bacon)
       rmagick (~> 2.15)
@@ -43,5 +43,8 @@ DEPENDENCIES
   sinatra
   teaas!
 
+RUBY VERSION
+   ruby 2.3.1p112
+
 BUNDLED WITH
-   1.11.2
+   1.12.5
