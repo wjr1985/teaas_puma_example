@@ -47,6 +47,10 @@ get '/pulse' do
   haml :pulse
 end
 
+get '/resize' do
+  haml :resize
+end
+
 get '/spin' do
   haml :spin
 end
@@ -164,6 +168,18 @@ post '/pulse' do
     pulsed_image = Teaas::Pulse.pulse_from_file(img_path)
 
     blob_result = _default_turbo(pulsed_image, params)
+    _process_and_display_results(blob_result)
+  else
+    haml :invalid_input
+  end
+end
+
+post '/resize' do
+  img_path = _read_image(params)
+  if img_path
+    blob_result = []
+    blob_result << Teaas::Resize.resize_from_file(img_path, params['resize'], :sample => params['sample']).to_blob
+
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
