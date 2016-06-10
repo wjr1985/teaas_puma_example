@@ -152,7 +152,14 @@ post '/parrotify' do
   if img_path
     parrotify_image = Teaas::Parrotify.parrotify_from_file(img_path)
 
-    blob_result = Teaas::Turboize.turbo(parrotify_image, params['resize'], [1000], :delay => 40, :sample => params['sample'])
+    resize = nil
+    if _custom_resize?(params)
+      resize = "#{params['resizex']}x#{params['resizey']}"
+    else
+      resize = params['resize']
+    end
+
+    blob_result = Teaas::Turboize.turbo(parrotify_image, resize, [1000], :delay => 40, :sample => params['sample'])
 
     blob_result << Magick::ImageList.new('public/parrot.gif').to_blob
 
@@ -177,8 +184,14 @@ end
 post '/resize' do
   img_path = _read_image(params)
   if img_path
+    resize = nil
+    if _custom_resize?(params)
+      resize = "#{params['resizex']}x#{params['resizey']}"
+    else
+      resize = params['resize']
+    end
     blob_result = []
-    blob_result << Teaas::Resize.resize_from_file(img_path, params['resize'], :sample => params['sample']).to_blob
+    blob_result << Teaas::Resize.resize_from_file(img_path, resize, :sample => params['sample']).to_blob
 
     _process_and_display_results(blob_result)
   else
@@ -189,10 +202,17 @@ end
 post '/turbo' do
   img_path = _read_image(params)
   if img_path
-    if params['allspeeds']
-      blob_result = Teaas::Turboize::turbo_from_file(img_path, params['resize'], nil, :sample => params['sample'])
+    resize = nil
+    if _custom_resize?(params)
+      resize = "#{params['resizex']}x#{params['resizey']}"
     else
-      blob_result = Teaas::Turboize::turbo_from_file(img_path, params['resize'], [params['turbo'].to_i], :sample => params['sample'])
+      resize = params['resize']
+    end
+
+    if params['allspeeds']
+      blob_result = Teaas::Turboize::turbo_from_file(img_path, resize, nil, :sample => params['sample'])
+    else
+      blob_result = Teaas::Turboize::turbo_from_file(img_path, resize, [params['turbo'].to_i], :sample => params['sample'])
     end
     _process_and_display_results(blob_result)
   else
@@ -251,7 +271,14 @@ def _upload_to_s3(blob_result)
 end
 
 def _default_turbo(image, params)
-    blob_result = Teaas::Turboize.turbo(image, params['resize'], nil, :sample => params['sample'])
+  resize = nil
+  if _custom_resize?(params)
+    resize = "#{params['resizex']}x#{params['resizey']}"
+  else
+    resize = params['resize']
+  end
+
+  blob_result = Teaas::Turboize.turbo(image, resize, nil, :sample => params['sample'])
 end
 
 def _read_image(params)
@@ -277,4 +304,12 @@ def _acceptable_image_type(path)
   file.close
 
   valid_image
+end
+
+def _custom_resize?(params)
+  if params['resizex'] && params['resizey'] && !params['resizex'].empty? && !params['resizey'].empty? && params['resize'] == "custom"
+    true
+  else
+    false
+  end
 end

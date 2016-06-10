@@ -1,6 +1,6 @@
 %h3 Resizing options
 Use these options to attempt to make the filesize of the image smaller.
-.radio
+.radio(onChange="customResizeSelected()")
   .btn-group
     %label(for="noresize")
       %input(type="radio" id="noresize" name="resize" value="" checked="checked")
@@ -17,6 +17,14 @@ Use these options to attempt to make the filesize of the image smaller.
     %label(for="resize128")
       %input(type="radio" id="resize128" name="resize" value="128x128")
         Resize* the image to 128x128
+    %br
+    .resizeany
+      %label(for="resizeany")
+        %input(type="radio" id="resizeany" name="resize" value="custom")
+          Resize* the image to
+          %input(type="text" name="resizex" id="resizex" disabled)
+          x
+          %input(type="text" name="resizey" id="resizey" disabled)
   %br
   %label(for="sample")
     %input(type="checkbox" id="sample" name="sample" value="sample")
