@@ -138,10 +138,28 @@ end
 post '/marquee' do
   img_path = _read_image(params)
   if img_path
+    case params['marquee_direction']
+    when 'r'
+      reverse = false
+      horizontal = true
+    when 'l'
+      reverse = true
+      horizontal = true
+    when 'u'
+      reverse = true
+      horizontal = false
+    when 'd'
+      reverse = false
+      horizontal = false
+    else
+      reverse = false
+      horizontal = false
+    end
+
     marquee_image = Teaas::Marquee.marquee_from_file(
       img_path,
-      :reverse => params['reverse'],
-      :horizontal => !params['vertical'],
+      :reverse => reverse,
+      :horizontal => horizontal,
       :crop => params['crop'],
     )
 
