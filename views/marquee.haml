@@ -20,4 +20,8 @@
           %label(for="vertical")
             %input(type="checkbox" id="vertical" name="vertical" value="true")
             Make the marquee go vertically (instead of horizontally)
+        .checkbox
+          %label(for="crop")
+            %input(type="checkbox" id="crop" name="crop" value="true")
+            Crop the image if it's taller than it is wide (to prevent gaps between emojis in programs like Slack)
         = haml :_form_footer

@@ -138,7 +138,12 @@ end
 post '/marquee' do
   img_path = _read_image(params)
   if img_path
-    marquee_image = Teaas::Marquee.marquee_from_file(img_path, :reverse => params['reverse'], :horizontal => !params['vertical'])
+    marquee_image = Teaas::Marquee.marquee_from_file(
+      img_path,
+      :reverse => params['reverse'],
+      :horizontal => !params['vertical'],
+      :crop => params['crop'],
+    )
 
     blob_result = _default_turbo(marquee_image, params)
     _process_and_display_results(blob_result)
