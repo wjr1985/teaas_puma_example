@@ -16,4 +16,8 @@
           %label(for="reverse")
             %input(type="checkbox" id="reverse" name="reverse" value="true")
             Reverse the marquee direction
+        .checkbox
+          %label(for="vertical")
+            %input(type="checkbox" id="vertical" name="vertical" value="true")
+            Make the marquee go vertically (instead of horizontally)
         = haml :_form_footer
