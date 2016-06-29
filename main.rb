@@ -39,6 +39,10 @@ get '/marquee' do
   haml :marquee
 end
 
+get '/mirror' do
+  haml :mirror
+end
+
 get '/parrotify' do
   haml :parrotify
 end
@@ -164,6 +168,18 @@ post '/marquee' do
     )
 
     blob_result = _default_turbo(marquee_image, params)
+    _process_and_display_results(blob_result)
+  else
+    haml :invalid_input
+  end
+end
+
+post '/mirror' do
+  img_path = _read_image(params)
+  if img_path
+    mirror_image = Teaas::Mirror.mirror_from_file(img_path)
+
+    blob_result = _default_turbo(mirror_image, params)
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
