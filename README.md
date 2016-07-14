@@ -1,13 +1,13 @@
-# teaas_heroku_example
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+# teaas_puma_example
 
-An example Heroku app that demonstrates the functionality of [Teaas](https://github.com/wjr1985/teaas). This project will tend to use experimental / testing branches of Teaas - check the `Gemfile` if you're worried about using experimental features. This will run just fine on the Heroku free tier. I use this currently without issue, although it hasn't gone under a ton of heavy load before.
+An example Puma app that demonstrates the functionality of [Teaas](https://github.com/wjr1985/teaas). This project will tend to use experimental / testing branches of Teaas - check the `Gemfile` if you're worried about using experimental features.
 
-If you want to run it locally for whatever reason: 
-
-* [Download ImageMagik](http://www.imagemagick.org/script/binary-releases.php) or `brew install ImageMagik` if you're using [homebrew](http://brew.sh/)
+To run this:
+* Download or install ImageMagick. On Ubuntu, you can run `sudo apt-get install libmagickwand-dev`. If you're using [homebrew](http://brew.sh), you can run `brew install ImageMagick`.
 * `bundle install`
-* `bundle exec ruby main.rb`.
+* `bundle exec ruby main.rb`
+
+Works fine on a VPS. I'm currently using a 1 CPU, 1GB RAM VPS, so if you can find something similar, it should work without issue.
 
 Uses Bootstrap and HAML templates, and is overall janky and hacky, but it works!
 
