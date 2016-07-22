@@ -11,6 +11,7 @@ RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 COPY Gemfile $APP_HOME
 RUN bundle install
+RUN bundle update teaas
 
 COPY . $APP_HOME
 EXPOSE 4567
