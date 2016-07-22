@@ -8,6 +8,8 @@ require 'teaas'
 
 require_relative 'lib/magic_number'
 
+set :bind, '0.0.0.0'
+
 Dotenv.load
 
 # We always want OpenURI to return a tempfile
