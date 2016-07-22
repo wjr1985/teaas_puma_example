@@ -45,6 +45,10 @@ get '/mirror' do
   haml :mirror
 end
 
+get '/noify' do
+  haml :noify
+end
+
 get '/parrotify' do
   haml :parrotify
 end
@@ -182,6 +186,18 @@ post '/mirror' do
     mirror_image = Teaas::Mirror.mirror_from_file(img_path)
 
     blob_result = _default_turbo(mirror_image, params)
+    _process_and_display_results(blob_result)
+  else
+    haml :invalid_input
+  end
+end
+
+post '/noify' do
+  img_path = _read_image(params)
+  if img_path
+    noify_image = Teaas::No.no_from_file(img_path)
+
+    blob_result = _default_turbo(noify_image, params)
     _process_and_display_results(blob_result)
   else
     haml :invalid_input
