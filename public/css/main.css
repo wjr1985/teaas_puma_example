@@ -43,6 +43,11 @@ input[type=file] {
 .resizeany input[type=text] {
   width: 30px;
 }
+
 input[type=text] {
   width: 600px;
+}
+
+.navbar-brand img {
+  padding-top: 3px;
 }
