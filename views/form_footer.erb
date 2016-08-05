@@ -1,0 +1,50 @@
+<h3>Resizing options</h3>
+Use these options to attempt to make the filesize of the image smaller.
+<div class='radio' onChange='customResizeSelected()'>
+  <div class='btn-group'>
+    <label for='noresize'>
+      <input checked='checked' id='noresize' name='resize' type='radio' value=''>
+      Do not resize the image
+      </input>
+    </label>
+    <br>
+    <label for='resize32'>
+      <input id='resize32' name='resize' type='radio' value='32x32'>
+      Resize* the image to 32x32
+      </input>
+    </label>
+    <br>
+    <label for='resize64'>
+      <input id='resize64' name='resize' type='radio' value='64x64'>
+      Resize* the image to 64x64
+      </input>
+    </label>
+    <br>
+    <label for='resize128'>
+      <input id='resize128' name='resize' type='radio' value='128x128'>
+      Resize* the image to 128x128
+      </input>
+    </label>
+    <br>
+    <div class='resizeany'>
+      <label for='resizeany'>
+        <input id='resizeany' name='resize' type='radio' value='custom'>
+        Resize* the image to
+        <input disabled id='resizex' name='resizex' type='text'>
+        x
+        <input disabled id='resizey' name='resizey' type='text'>
+        </input>
+      </label>
+    </div>
+  </div>
+  <br>
+  <label for='sample'>
+    <input id='sample' name='sample' type='checkbox' value='sample'>
+    Use the sampling method to resize the image. Check this to help reduce the file size even further, with image quality suffering a bit.
+    </input>
+  </label>
+</div>
+<br>
+<input class='btn btn-primary btn-lg' type='submit' value='GOGOGOGOGOGOGOGO'>
+<hr>
+<div class='help-block'>* The image will be resized, but the aspect ratio will be retained, so you may up with an image with dimensions 32x12 or 20x64 for example.</div>

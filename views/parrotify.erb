@@ -1,0 +1,18 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Total (or parrot) Emojis as a Service! (TEaaS)</h1>
+      <p>Want to generate your own parrot-like emoji? Here's the place!</p>
+      <img src='parrot.gif'>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/parrotify' enctype='multipart/form-data' method='POST'>
+        <p>Note: File should not be animated (static GIFs are supported)</p>
+        <%= erb :upload_button %>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>
+

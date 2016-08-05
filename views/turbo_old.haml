@@ -1,7 +1,7 @@
 !!!
-= haml :generic_header
+= erb :generic_header
 %body
-  = haml :nav
+  = erb :nav
   %div.container
     %div.starter
       %h1 Turbo (or slowmo) Emojis as a Service! (TEaaS)
@@ -14,7 +14,7 @@
       %h2 LET THE FORM BEGIN!
       %form(method="POST" action="/turbo" enctype="multipart/form-data")
         %p Note: File should already be a GIF
-        = haml :upload_button
+        = erb :upload_button
         %br
         - [2, 5].each do |i|
           - name = "slowmo-#{i}"
@@ -37,4 +37,4 @@
           %label(for="allspeeds")
             %input(type="checkbox" name="allspeeds")
             Generates ALL turbo and slowmo speeds listed above (ignores selection)
-        = haml :_form_footer
+        = erb :form_footer

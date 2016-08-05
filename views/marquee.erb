@@ -1,0 +1,50 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Total (or marquee) Emojis as a Service! (TEaaS)</h1>
+      <p>Want to generate your own marquee emoji? Here's the place!</p>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/marquee' enctype='multipart/form-data' method='POST'>
+        <%= erb :upload_button %>
+        <br>
+        <div class='checkbox'>
+          <label for='crop'>
+            <input id='crop' name='crop' type='checkbox' value='true'>
+            Crop the image if it's taller than it is wide (to prevent gaps between emojis in programs like Slack)
+          </label>
+        </div>
+        <h3>Marquee direction options</h3>
+        <div class='radio'>
+          <div class='btn-group'>
+            <label for='marquee_r'>
+              <input checked='checked' id='marquee_r' name='marquee_direction' type='radio' value='r'>
+              To the right (default)
+              </input>
+            </label>
+            <br>
+            <label for='marquee_l'>
+              <input id='marquee_l' name='marquee_direction' type='radio' value='l'>
+              To the left
+              </input>
+            </label>
+            <br>
+            <label for='marquee_u'>
+              <input id='marquee_u' name='marquee_direction' type='radio' value='u'>
+              Upwards
+              </input>
+            </label>
+            <br>
+            <label for='marquee_d'>
+              <input id='marquee_d' name='marquee_direction' type='radio' value='d'>
+              Downwards
+              </input>
+            </label>
+          </div>
+        </div>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>

@@ -1,0 +1,24 @@
+<%= erb :generic_header %>
+
+<body>
+  <%= erb :nav %>
+  <div class="container">
+    <h1>RESULTS!!!</h1>
+    <% if ENV["AWS_S3_BUCKET_NAME"] %>
+      Note: These emojis are saved for a limited time only. Make sure to download the ones you want to keep!
+      <br>
+      <% @result.each do |r| %>
+        <img src="<%= r %>">
+        <br>
+        <br>
+      <% end %>
+    <% else %>
+      <% @result.each do |r| %>
+        <img src="<%= "data:image/gif;base64,#{r}" %>">
+        <br>
+        <br>
+      <% end %>
+    <% end %>
+  </div>
+</body>
+

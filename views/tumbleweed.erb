@@ -1,0 +1,25 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Tumbleweed Emojis as a Service! (TEaaS)</h1>
+      <p>Want to generate your own tumbleweed emoji? Here's the place!</p>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/tumbleweed' enctype='multipart/form-data' method='POST'>
+        <%= erb :upload_button %>
+        <div class='form-group form-inline'>
+          <select class='form-control' id='rotations' name='rotations' type='number'>
+            <% (1..50).each do |i| %>
+              <% selected = i == 4 %>
+              <option value="<%= i %>" <%= selected if selected %>>
+            <% end %>
+          </select>
+          <label for='rotations'>Number of rotations</label>
+        </div>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>
+

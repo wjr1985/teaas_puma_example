@@ -1,0 +1,19 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Total(ly engulfed in flames) Emojis as a Service! (TEaaS)</h1>
+      <p>Catch your emojis on fire.</p>
+      <img src='fire.gif'>
+      <p>Only works best on square or square-ish images.</p>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/fireify' enctype='multipart/form-data' method='POST'>
+        <p>Note: File should not be animated (static GIFs are supported)</p>
+        <%= erb :upload_button %>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>
+

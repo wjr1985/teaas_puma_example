@@ -1,0 +1,17 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Total(ly different sized) Emojis as a Service! (TEaaS)</h1>
+      <p>Have something animated already and just want to resize it? Here you go!</p>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/resize' enctype='multipart/form-data' method='POST'>
+        <p>Note: Images returned will always be a GIF, even if the input is a static image</p>
+        <%= erb :upload_button %>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>
+

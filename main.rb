@@ -18,59 +18,63 @@ OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined
 OpenURI::Buffer.const_set 'StringMax', 0
 
 get '/' do
-  haml :index
+  erb :index
 end
 
 get '/bloodify' do
-  haml :bloodify
+  erb :bloodify
 end
 
 get '/fireify' do
-  haml :fireify
+  erb :fireify
 end
 
 get '/gotify' do
-  haml :gotify
+  erb :gotify
 end
 
 get '/intensify' do
-  haml :intensify
+  erb :intensify
 end
 
 get '/marquee' do
-  haml :marquee
+  erb :marquee
 end
 
 get '/mirror' do
-  haml :mirror
+  erb :mirror
 end
 
 get '/noify' do
-  haml :noify
+  erb :noify
 end
 
 get '/parrotify' do
-  haml :parrotify
+  erb :parrotify
 end
 
 get '/pulse' do
-  haml :pulse
+  erb :pulse
 end
 
 get '/resize' do
-  haml :resize
+  erb :resize
 end
 
 get '/spin' do
-  haml :spin
+  erb :spin
 end
 
 get '/tumbleweed' do
-  haml :tumbleweed
+  erb :tumbleweed
 end
 
 get '/turbo' do
-  haml :turbo
+  erb :turbo
+end
+
+get '/turbo_old' do
+  haml :turbo_old
 end
 
 def valid_image_input?(params)
@@ -100,7 +104,7 @@ post '/bloodify' do
     blob_result = _default_turbo(blood_image, params)
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -112,9 +116,9 @@ post '/fireify' do
     blob_result = _default_turbo(fire_image, params)
     _process_and_display_results(blob_result)
 
-    haml :result
+    erb :result
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -126,9 +130,9 @@ post '/gotify' do
     blob_result = _default_turbo(fire_image, params)
     _process_and_display_results(blob_result)
 
-    haml :result
+    erb :result
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -141,7 +145,7 @@ post '/intensify' do
     blob_result = _default_turbo(intensified_image, params)
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -176,7 +180,7 @@ post '/marquee' do
     blob_result = _default_turbo(marquee_image, params)
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -188,7 +192,7 @@ post '/mirror' do
     blob_result = _default_turbo(mirror_image, params)
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -200,7 +204,7 @@ post '/noify' do
     blob_result = _default_turbo(noify_image, params)
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -222,7 +226,7 @@ post '/parrotify' do
 
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -234,7 +238,7 @@ post '/pulse' do
     blob_result = _default_turbo(pulsed_image, params)
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -252,7 +256,7 @@ post '/resize' do
 
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -273,7 +277,7 @@ post '/turbo' do
     end
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -286,7 +290,7 @@ post '/tumbleweed' do
     blob_result = _default_turbo(marquee_image, params)
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -303,7 +307,7 @@ post '/spin' do
     blob_result = _default_turbo(spinned_image, params)
     _process_and_display_results(blob_result)
   else
-    haml :invalid_input
+    erb :invalid_input
   end
 end
 
@@ -314,7 +318,7 @@ def _process_and_display_results(blob_result)
     @result = blob_result.map { |i| Base64.encode64(i) }
   end
 
-  haml :result
+  erb :result
 end
 
 def _upload_to_s3(blob_result)

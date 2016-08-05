@@ -1,0 +1,31 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Total (or spinny) Emojis as a Service! (TEaaS)</h1>
+      <p>Want to generate your own spinny emoji? Here's the place!</p>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/spin' enctype='multipart/form-data' method='POST'>
+        <%= erb :upload_button %>
+        <div class='form-group form-inline'>
+          <select class='form-control' id='rotations' name='rotations' type='number'>
+            <% (1..50).each do |i| %>
+              <% selected = i == 4 %>
+              <option value="<%= i %>" <%= "selected" if selected %>><%= i %></option>
+            <% end %>
+          </select>
+          <label for='rotations'>Number of rotations</label>
+        </div>
+        <div class='checkbox'>
+          <label for='counterclockwise'>
+            <input id='counterclockwise' name='counterclockwise' type='checkbox' value='true'>
+            Spin counterclockwise instead of clockwise
+          </label>
+        </div>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>
+
