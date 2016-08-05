@@ -37,6 +37,10 @@ get '/intensify' do
   erb :intensify
 end
 
+get '/magrittify' do
+  erb :magrittify
+end
+
 get '/marquee' do
   erb :marquee
 end
@@ -143,6 +147,18 @@ post '/intensify' do
     intensified_image = Teaas::Intensify.intensify_from_file(img_path)
 
     blob_result = _default_turbo(intensified_image, params)
+    _process_and_display_results(blob_result)
+  else
+    erb :invalid_input
+  end
+end
+
+post '/magrittify' do
+  img_path = _read_image(params)
+  if img_path
+    new_image = Teaas::Magrittify.magrittify_from_file(img_path)
+
+    blob_result = _default_turbo(new_image, params)
     _process_and_display_results(blob_result)
   else
     erb :invalid_input

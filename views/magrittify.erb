@@ -1,0 +1,16 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>TEaaS</h1>
+      <p>Do you like green apples? Put a green apple over an emoji for the iconic Magritte effect.
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/magrittify' enctype='multipart/form-data' method='POST'>
+        <%= erb :upload_button %>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>
+
