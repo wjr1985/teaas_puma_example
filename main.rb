@@ -17,68 +17,14 @@ Dotenv.load
 OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
 OpenURI::Buffer.const_set 'StringMax', 0
 
+["bloodify", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "spin", "tumbleweed", "turbo"].each do |route|
+  get "/#{route}" do
+    erb route.to_sym
+  end
+end
+
 get '/' do
   erb :index
-end
-
-get '/bloodify' do
-  erb :bloodify
-end
-
-get '/fireify' do
-  erb :fireify
-end
-
-get '/gotify' do
-  erb :gotify
-end
-
-get '/intensify' do
-  erb :intensify
-end
-
-get '/magrittify' do
-  erb :magrittify
-end
-
-get '/marquee' do
-  erb :marquee
-end
-
-get '/mirror' do
-  erb :mirror
-end
-
-get '/noify' do
-  erb :noify
-end
-
-get '/parrotify' do
-  erb :parrotify
-end
-
-get '/pulse' do
-  erb :pulse
-end
-
-get '/resize' do
-  erb :resize
-end
-
-get '/spin' do
-  erb :spin
-end
-
-get '/tumbleweed' do
-  erb :tumbleweed
-end
-
-get '/turbo' do
-  erb :turbo
-end
-
-get '/turbo_old' do
-  haml :turbo_old
 end
 
 def valid_image_input?(params)
@@ -93,76 +39,25 @@ def valid_spin_input?(params)
   params['rotations'].to_i <= 50
 end
 
-def turboize(img, turbo)
-  img.delay = 1
-  img.ticks_per_second = turbo
-  img.iterations = 0
-  img
-end
-
 post '/bloodify' do
-  img_path = _read_image(params)
-  if img_path
-    blood_image = Teaas::Blood.blood_from_file(img_path)
-
-    blob_result = _default_turbo(blood_image, params)
-    _process_and_display_results(blob_result)
-  else
-    erb :invalid_input
-  end
+  _generic_post(Teaas::Blood, "blood", params)
 end
 
 post '/fireify' do
-  img_path = _read_image(params)
-  if img_path
-    fire_image = Teaas::Fire.fire_from_file(img_path)
-
-    blob_result = _default_turbo(fire_image, params)
-    _process_and_display_results(blob_result)
-
-    erb :result
-  else
-    erb :invalid_input
-  end
+  _generic_post(Teaas::Fire, "fire", params)
 end
 
 post '/gotify' do
-  img_path = _read_image(params)
-  if img_path
-    fire_image = Teaas::Got.got_from_file(img_path)
-
-    blob_result = _default_turbo(fire_image, params)
-    _process_and_display_results(blob_result)
-
-    erb :result
-  else
-    erb :invalid_input
-  end
+  _generic_post(Teaas::Got, "got", params)
 end
 
 
 post '/intensify' do
-  img_path = _read_image(params)
-  if img_path
-    intensified_image = Teaas::Intensify.intensify_from_file(img_path)
-
-    blob_result = _default_turbo(intensified_image, params)
-    _process_and_display_results(blob_result)
-  else
-    erb :invalid_input
-  end
+  _generic_post(Teaas::Intensify, "intensify", params)
 end
 
 post '/magrittify' do
-  img_path = _read_image(params)
-  if img_path
-    new_image = Teaas::Magrittify.magrittify_from_file(img_path)
-
-    blob_result = _default_turbo(new_image, params)
-    _process_and_display_results(blob_result)
-  else
-    erb :invalid_input
-  end
+  _generic_post(Teaas::Magrittify, "magrittify", params)
 end
 
 post '/marquee' do
@@ -201,27 +96,11 @@ post '/marquee' do
 end
 
 post '/mirror' do
-  img_path = _read_image(params)
-  if img_path
-    mirror_image = Teaas::Mirror.mirror_from_file(img_path)
-
-    blob_result = _default_turbo(mirror_image, params)
-    _process_and_display_results(blob_result)
-  else
-    erb :invalid_input
-  end
+  _generic_post(Teaas::Mirror, "mirror", params)
 end
 
 post '/noify' do
-  img_path = _read_image(params)
-  if img_path
-    noify_image = Teaas::No.no_from_file(img_path)
-
-    blob_result = _default_turbo(noify_image, params)
-    _process_and_display_results(blob_result)
-  else
-    erb :invalid_input
-  end
+  _generic_post(Teaas::No, "no", params)
 end
 
 post '/parrotify' do
@@ -247,15 +126,7 @@ post '/parrotify' do
 end
 
 post '/pulse' do
-  img_path = _read_image(params)
-  if img_path
-    pulsed_image = Teaas::Pulse.pulse_from_file(img_path)
-
-    blob_result = _default_turbo(pulsed_image, params)
-    _process_and_display_results(blob_result)
-  else
-    erb :invalid_input
-  end
+  _generic_post(Teaas::Pulse, "pulse", params)
 end
 
 post '/resize' do
@@ -321,6 +192,18 @@ post '/spin' do
     spinned_image = Teaas::Spin.spin_from_file(img_path, options)
 
     blob_result = _default_turbo(spinned_image, params)
+    _process_and_display_results(blob_result)
+  else
+    erb :invalid_input
+  end
+end
+
+def _generic_post(teaas_class, method_prefix, params)
+  img_path = _read_image(params)
+  if img_path
+    image = teaas_class.send("#{method_prefix}_from_file", img_path)
+
+    blob_result = _default_turbo(image, params)
     _process_and_display_results(blob_result)
   else
     erb :invalid_input
