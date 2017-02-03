@@ -17,7 +17,7 @@ Dotenv.load
 OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
 OpenURI::Buffer.const_set 'StringMax', 0
 
-["bloodify", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "spin", "tumbleweed", "turbo"].each do |route|
+["bloodify", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "spin", "tumbleweed", "turbo", "waitify"].each do |route|
   get "/#{route}" do
     erb route.to_sym
   end
@@ -183,6 +183,10 @@ post '/tumbleweed' do
   else
     erb :invalid_input
   end
+end
+
+post '/waitify' do
+  _generic_post(Teaas::Wait, "wait", params)
 end
 
 post '/spin' do
