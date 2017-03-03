@@ -1,0 +1,18 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Two Emojis as a Service! (TEaaS)</h1>
+      <p>Append two animated images together to make one epic image! <strong>[BETA]</strong></p>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/appendify' enctype='multipart/form-data' method='POST'>
+        <p>Note: Both images should be animated. If not, the static image might not appear.</p>
+        <p>Note: Works best if both images are square.</p>
+        <%= erb :upload_button %>
+        <%= erb :second_upload_button %>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>

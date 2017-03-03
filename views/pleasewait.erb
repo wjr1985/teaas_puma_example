@@ -1,0 +1,15 @@
+<%= erb :generic_header %>
+<body>
+  <script src="/js/jquery.redirect.js"></script>
+  <script>
+    setTimeout(function() {
+      $.redirect('check_status', {'forwarded_params': <%= params.to_json %>, 'upload_filename': '<%= upload_filename %>'});
+    }, 5000);
+  </script>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Please wait. System processing. Do not refresh this page, unless you don't like emojis, then go ahead.</h1>
+    </div>
+  </div>
+</body>
+

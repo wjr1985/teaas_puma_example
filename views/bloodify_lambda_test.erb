@@ -1,0 +1,18 @@
+<%= erb :generic_header %>
+<body>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Total (or bloody) Emojis as a Service! (TEaaS)</h1>
+      <p>Add a touch of blood to your emoji.</p>
+      <img src='blood.gif'>
+      <p>The source image is very low resolution, so results may vary. Only works best on square or square-ish images.</p>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/bloodify' enctype='multipart/form-data' method='POST'>
+        <p>Note: File should not be animated (static GIFs are supported)</p>
+        <%= erb :upload_button %>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>
+

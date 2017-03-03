@@ -1,6 +1,7 @@
 require 'aws-sdk'
 require 'base64'
 require 'dotenv'
+require 'json'
 require 'open-uri'
 require 'rmagick'
 require 'sinatra'
@@ -17,7 +18,7 @@ Dotenv.load
 OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
 OpenURI::Buffer.const_set 'StringMax', 0
 
-["bloodify", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "tumbleweed", "turbo", "waitify"].each do |route|
+["appendify", "bloodify", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "tumbleweed", "turbo", "waitify"].each do |route|
   get "/#{route}" do
     erb route.to_sym
   end
@@ -27,8 +28,8 @@ get '/' do
   erb :index
 end
 
-def valid_image_input?(params)
-  params['imagefile'] && params['imagefile'][:type].start_with?('image') && File.size(params['imagefile'][:tempfile].path) <= 500000
+def valid_image_input?(params, image_param_name = 'imagefile')
+  params[image_param_name] && params[image_param_name][:type].start_with?('image') && File.size(params[image_param_name][:tempfile].path) <= 500000
 end
 
 def valid_url_input?(url)
@@ -39,8 +40,47 @@ def valid_spin_input?(params)
   params['rotations'].to_i <= 50
 end
 
+post '/appendify' do
+  if ENV['AWS_ACCESS_KEY_ID'] && ENV['AWS_SECRET_ACCESS_KEY']
+    _lambda_appendify_post("appender", params)
+  else
+    erb :not_available
+  end
+end
+
 post '/bloodify' do
-  _generic_post(Teaas::Blood, "blood", params)
+  if ENV['AWS_ACCESS_KEY_ID'] && ENV['AWS_SECRET_ACCESS_KEY'] && false # we don't want to use this at all yet
+    _lambda_overlayer_post("overlayer", params)
+  else
+    _generic_post(Teaas::Blood, "blood", params)
+  end
+end
+
+post '/check_status' do
+  @s3 ||= Aws::S3::Resource.new
+  bucket = @s3.bucket("#{ENV['AWS_S3_BUCKET_NAME']}-processed")
+  filename = params[:upload_filename]
+  forwarded_params = params[:forwarded_params]
+
+  obj = bucket.object(filename)
+  if obj.exists?
+    tempfile = Tempfile.new("transformed_image")
+    obj.get(:response_target => tempfile)
+    if _custom_resize?(forwarded_params)
+      resize = "#{forwarded_params['resizex']}x#{forwarded_params['resizey']}"
+    else
+      resize = forwarded_params['resize']
+    end
+
+    blob_result = Teaas::Turboize::turbo_from_file(tempfile.path, resize, nil, :sample => forwarded_params['sample'])
+
+    tempfile.close
+    tempfile.unlink
+
+    _process_and_display_results(blob_result)
+  else
+    erb :pleasewait, :locals => {:upload_filename => filename, :params => forwarded_params}
+  end
 end
 
 post '/fireify' do
@@ -226,8 +266,89 @@ def _generic_post(teaas_class, method_prefix, params)
   end
 end
 
+def _lambda_overlayer_post(action, params)
+  @s3 ||= Aws::S3::Resource.new
+  bucket = @s3.bucket(ENV['AWS_S3_BUCKET_NAME'])
+  img_path = _read_image(params)
+  source_filename = "#{SecureRandom.uuid}#{File.extname(img_path)}"
+  upload_filename = "#{SecureRandom.uuid}.gif"
+  obj = bucket.object("emojis_to_process/#{source_filename}")
+  obj.put(:body => File.new(img_path), :acl => 'public-read')
+
+  object_path = obj.public_url
+
+  lambda_params = {
+    "Records" => [
+      {
+        "s3" => {
+          "object" => {
+            "prefix" => "emojis_to_process",
+            "key" => source_filename,
+            "overlayer_key" => "blood.gif",
+          },
+          "bucket" => {
+            "name" => "teaas",
+          }
+        },
+        "action" => action,
+        "upload_filename" => upload_filename,
+      }
+    ]
+  }.to_json
+
+  _common_lambda(params, lambda_params, upload_filename)
+end
+
+def _lambda_appendify_post(action, params)
+  @s3 ||= Aws::S3::Resource.new
+  bucket = @s3.bucket(ENV['AWS_S3_BUCKET_NAME'])
+  img_path = _read_image(params)
+  second_image_path = _read_image(params, "second_imagefile")
+  source_filename = "#{SecureRandom.uuid}#{File.extname(img_path)}"
+  second_source_filename = "#{SecureRandom.uuid}#{File.extname(second_image_path)}"
+  upload_filename = "#{SecureRandom.urlsafe_base64}.gif"
+  obj = bucket.object("emojis_to_process/#{source_filename}")
+  obj.put(:body => File.new(img_path), :acl => 'public-read')
+
+  obj = bucket.object("emojis_to_process/#{second_source_filename}")
+  obj.put(:body => File.new(second_image_path), :acl => 'public-read')
+
+  lambda_params = {
+    "Records" => [
+      {
+        "s3" => {
+          "object" => {
+            "prefix" => "emojis_to_process",
+            "key" => source_filename,
+            "second_image" => second_source_filename,
+          },
+          "bucket" => {
+            "name" => "teaas",
+          }
+        },
+        "action" => action,
+        "upload_filename" => upload_filename,
+      }
+    ]
+  }.to_json
+
+  _common_lambda(params, lambda_params, upload_filename)
+end
+
+def _common_lambda(params, payload, upload_filename)
+  lambda_client = Aws::Lambda::Client.new(:region => 'us-east-1')
+  resp = lambda_client.invoke(
+    :function_name => "teaasJobs",
+    :invocation_type => "Event",
+    :log_type => "None",
+    :payload => payload,
+  )
+
+  erb :pleasewait, :locals => {:upload_filename => upload_filename, :params => params}
+end
+
 def _process_and_display_results(blob_result)
-  if ENV['AWS_S3_BUCKET_NAME']
+  if ENV['UPLOAD_FILES_TO_AWS_S3']
     @result = _upload_to_s3(blob_result)
   else
     @result = blob_result.map { |i| Base64.encode64(i) }
@@ -237,8 +358,8 @@ def _process_and_display_results(blob_result)
 end
 
 def _upload_to_s3(blob_result)
-  s3 = Aws::S3::Resource.new
-  bucket = s3.bucket(ENV['AWS_S3_BUCKET_NAME'])
+  @s3 ||= Aws::S3::Resource.new
+  bucket = @s3.bucket(ENV['AWS_S3_BUCKET_NAME'])
   blob_result.map do |res|
     obj = bucket.object("emojis/#{SecureRandom.uuid}.gif")
     obj.put(:body => res, :acl => 'public-read')
@@ -257,10 +378,10 @@ def _default_turbo(image, params)
   blob_result = Teaas::Turboize.turbo(image, resize, nil, :sample => params['sample'])
 end
 
-def _read_image(params)
+def _read_image(params, image_param_name = 'imagefile')
   img_path = nil
-  if valid_image_input?(params)
-    img_path = params['imagefile'][:tempfile].path
+  if valid_image_input?(params, image_param_name)
+    img_path = params[image_param_name][:tempfile].path
   elsif valid_url_input?(params['fileurl'])
     begin
       file = open(params['fileurl'])
