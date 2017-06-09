@@ -1,0 +1,23 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Total Emojis as a Service! (TEaaS)</h1>
+      <p>Overlay ANY image on top of another one! <strong>[BETA]</strong></p>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/customoverlayer' enctype='multipart/form-data' method='POST'>
+        Notes:<br>
+        This is definitely in BETA, so things might not work as you expect.<br>
+        This can create very large images, especially if one of the images has a lot of frames.<br>
+        The second image should have a transparent background, otherwise this won't work.<br>
+        Works best when both images are the same shape.<br>
+        Please report any issues to me directly - either through Slack or through the electronic mail address <code>why AT teaas DOT fyi</code>.<br>
+        <br>
+        <%= erb :upload_button %>
+        <%= erb :second_upload_button %>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>

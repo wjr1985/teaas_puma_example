@@ -18,7 +18,7 @@ Dotenv.load
 OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
 OpenURI::Buffer.const_set 'StringMax', 0
 
-["appendify", "bloodify", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "tumbleweed", "turbo", "waitify"].each do |route|
+["appendify", "bloodify", "customoverlayer", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "tumbleweed", "turbo", "waitify"].each do |route|
   get "/#{route}" do
     erb route.to_sym
   end
@@ -80,6 +80,14 @@ post '/check_status' do
     _process_and_display_results(blob_result)
   else
     erb :pleasewait, :locals => {:upload_filename => filename, :params => forwarded_params}
+  end
+end
+
+post '/customoverlayer' do
+  if ENV['AWS_ACCESS_KEY_ID'] && ENV['AWS_SECRET_ACCESS_KEY']
+    _lambda_overlayer_post("overlayer", params)
+  else
+    erb :not_available
   end
 end
 
@@ -270,12 +278,15 @@ def _lambda_overlayer_post(action, params)
   @s3 ||= Aws::S3::Resource.new
   bucket = @s3.bucket(ENV['AWS_S3_BUCKET_NAME'])
   img_path = _read_image(params)
+  second_image_path = _read_image(params, "second_imagefile")
   source_filename = "#{SecureRandom.uuid}#{File.extname(img_path)}"
-  upload_filename = "#{SecureRandom.uuid}.gif"
+  second_source_filename = "#{SecureRandom.uuid}#{File.extname(second_image_path)}"
+  upload_filename = "#{SecureRandom.urlsafe_base64}.gif"
   obj = bucket.object("emojis_to_process/#{source_filename}")
   obj.put(:body => File.new(img_path), :acl => 'public-read')
 
-  object_path = obj.public_url
+  obj = bucket.object("emojis_to_process/#{second_source_filename}")
+  obj.put(:body => File.new(second_image_path), :acl => 'public-read')
 
   lambda_params = {
     "Records" => [
@@ -284,7 +295,7 @@ def _lambda_overlayer_post(action, params)
           "object" => {
             "prefix" => "emojis_to_process",
             "key" => source_filename,
-            "overlayer_key" => "blood.gif",
+            "overlayer_key" => second_source_filename,
           },
           "bucket" => {
             "name" => "teaas",
