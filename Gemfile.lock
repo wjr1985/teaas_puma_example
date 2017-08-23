@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/wjr1985/teaas.git
-  revision: dbbfa4f8b02f9213bf823e47d61c77de5e42807e
-  ref: dbbfa4f8b02f9213bf823e47d61c77de5e42807e
+  revision: 3818242fc791db4a5340747dcaddb92295b11508
+  ref: 3818242fc791db4a5340747dcaddb92295b11508
   specs:
     teaas (1.0.0)
       rmagick (~> 2.15)
@@ -45,4 +45,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.13.6
+   1.14.6
