@@ -1,0 +1,18 @@
+<%= erb :generic_header %>
+<body>
+  <%= erb :nav %>
+  <div class='container'>
+    <div class='starter'>
+      <h1>Deal with it. (TEaaS)</h1>
+      <img src='dealwithapple.gif'>
+      <p>Only works best on square or square-ish images.</p>
+      <h2>LET THE FORM BEGIN!</h2>
+      <form action='/dealwithit' enctype='multipart/form-data' method='POST'>
+        <p>Note: File should not be animated (static GIFs are supported)</p>
+        <%= erb :upload_button %>
+        <%= erb :form_footer %>
+      </form>
+    </div>
+  </div>
+</body>
+

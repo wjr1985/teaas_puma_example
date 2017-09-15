@@ -18,7 +18,7 @@ Dotenv.load
 OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
 OpenURI::Buffer.const_set 'StringMax', 0
 
-["appendify", "bloodify", "customoverlayer", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "think", "tumbleweed", "turbo", "waitify"].each do |route|
+["appendify", "bloodify", "customoverlayer", "dealwithit", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "think", "tumbleweed", "turbo", "waitify"].each do |route|
   get "/#{route}" do
     erb route.to_sym
   end
@@ -88,6 +88,27 @@ post '/customoverlayer' do
     _lambda_overlayer_post("overlayer", params)
   else
     erb :not_available
+  end
+end
+
+post '/dealwithit' do
+  img_path = _read_image(params)
+  if img_path
+    image = Teaas::Dealwithit.dealwithit_from_file(img_path)
+
+    resize = nil
+    if _custom_resize?(params)
+      resize = "#{params['resizex']}x#{params['resizey']}"
+    else
+      resize = params['resize']
+    end
+
+    image = Teaas::Resize.resize(image, resize, :sample => params['sample']) if !resize.nil? && !resize.empty?
+    blob_result = [image.to_blob]
+
+    _process_and_display_results(blob_result)
+  else
+    erb :invalid_input
   end
 end
 
