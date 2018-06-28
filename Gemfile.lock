@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/wjr1985/teaas.git
-  revision: 546c4ee3694af9ddbd92435bfac337e196e5f1e5
-  ref: 546c4ee3694af9ddbd92435bfac337e196e5f1e5
+  revision: b399d7ae8f1b8520039caec201ae61780e075fc4
+  ref: b399d7ae8f1b8520039caec201ae61780e075fc4
   specs:
     teaas (1.0.0)
       rmagick (~> 2.15)
