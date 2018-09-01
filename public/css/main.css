@@ -51,3 +51,44 @@ input[type=text] {
 .navbar-brand img {
   padding-top: 3px;
 }
+
+/* Upload to slack classes */
+.toggle {
+  display: none;
+}
+
+.output-container {
+  outline: 1px solid black;
+  box-shadow: 1em 1em 1em #6ec4cb;
+  padding: 1em;
+  height: auto;
+  width: 100%;
+  max-height: 50vh;
+  overflow: auto;
+  float: left;
+  margin-bottom: 3em;
+}
+.output-container:nth-child(4n + 1){
+  box-shadow: 1em 1em 1em #cf0e5b;
+}
+.output-container:nth-child(4n + 2){
+  box-shadow: 1em 1em 1em #3aae84;
+}
+.output-container:nth-child(4n + 3){
+  box-shadow: 1em 1em 1em #e2a52e;
+}
+
+.output__action-container {
+  width: auto;
+  height: auto;
+  overflow: hidden;
+}
+
+.output__content-image, .output__action-button-container {
+  float: left;
+}
+
+.output__upload-container {
+  float: right;
+  width:90%;
+}

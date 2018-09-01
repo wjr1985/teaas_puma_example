@@ -6,6 +6,8 @@ require 'open-uri'
 require 'rmagick'
 require 'sinatra'
 require 'teaas'
+require 'net/https'
+require 'net/http/post/multipart'
 
 require_relative 'lib/magic_number'
 
@@ -18,9 +20,16 @@ Dotenv.load
 OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
 OpenURI::Buffer.const_set 'StringMax', 0
 
-["appendify", "bloodify", "customoverlayer", "dealwithit", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "think", "tumbleweed", "turbo", "waitify"].each do |route|
+actions = ["appendify", "bloodify", "customoverlayer", "dealwithit", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "think", "tumbleweed", "turbo", "waitify"]
+
+actions.each do |route|
   get "/#{route}" do
     erb route.to_sym
+  end
+
+  post "/#{route}" do
+    @action = route
+    pass
   end
 end
 
@@ -266,6 +275,43 @@ post '/tumbleweed' do
   end
 end
 
+post '/uploadToSlack' do
+  if ENV['DISABLE_SLACK_UPLOAD']
+    erb :invalid_input
+    return
+  end
+
+  emoji_name = params['emojiName'] || params['originalFilenameSlug'] + '_' + params['action']
+  filetype = params['originalFilename'].split(".").last
+  token = params['slackToken']
+  instance = params['slackInstance']
+  uri = URI.parse("https://#{instance}.slack.com/api/emoji.add")
+
+  emoji_file = UploadIO.new(StringIO.new(Base64.decode64(params['emojiData'])), "image/#{filetype}", "emoji.#{filetype}")
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  req = Net::HTTP::Post::Multipart.new(uri, image: emoji_file, token: token, name: emoji_name, mode: "data")
+  res = http.request(req)
+  body = JSON.parse(res.body)
+
+  @upload_data = {
+    emoji_name: emoji_name,
+    token: token,
+    instance: instance,
+    emoji_data: params["emojiData"]
+  }
+
+  if (res.code != '200' || body["ok"] != true)
+    @error = {
+      body: res.body,
+      code: res.code,
+      message: body["error"]
+    }
+  end
+
+  erb :slack_result
+end
+
 post '/waitify' do
   _generic_post(Teaas::Wait, "wait", params)
 end
@@ -418,12 +464,16 @@ def _read_image(params, image_param_name = 'imagefile')
   img_path = nil
   if valid_image_input?(params, image_param_name)
     img_path = params[image_param_name][:tempfile].path
+    @original_filename = params[image_param_name][:filename]
+    @original_filename_slug = File.basename(@original_filename, File.extname(@original_filename))
   elsif valid_url_input?(params['fileurl'])
     begin
       file = open(params['fileurl'])
       if _acceptable_image_type(file.path)
         img_path = file.path
       end
+      @original_filename_slug = "custom_emoji"
+      @original_filename = "#{@original_filename_slug}.#{_image_type(file.path)}"
     rescue OpenURI::HTTPError
     end
   end
@@ -437,6 +487,17 @@ def _acceptable_image_type(path)
   file.close
 
   valid_image
+end
+
+def _image_type(path)
+  file = File.open(path, 'rb')
+  header = file.read(4)
+  file.close
+
+  return 'gif' if MagicNumber.gif?(header)
+  return 'jpg' if MagicNumber.jpg?(header)
+  return 'png' if MagicNumber.png?(header)
+  return ''
 end
 
 def _custom_resize?(params)

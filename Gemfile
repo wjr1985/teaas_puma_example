@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 ruby "2.3.1"
 gem 'aws-sdk', '~> 2'
 gem 'dotenv'
+gem 'multipart-post'
 gem 'puma'
 gem 'sinatra'
 gem 'rmagick'

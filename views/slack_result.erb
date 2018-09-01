@@ -1,0 +1,16 @@
+<%= erb :generic_header %>
+
+<body>
+  <%= erb :nav %>
+  <div class="container">
+    <% if @error %>
+      <h1>Uh oh!</h1>
+      <h2>Looks like we had some trouble getting your beautiful art to slack:<h2>
+      <h3><%= defined?(@error[:message]) ? @error[:message] : 'unknown error' %></h3>
+    <% else %>
+      <h1>Success!</h1>
+      <h4>You should now be able to type :<%=@upload_data[:emoji_name]%>: on <%=@upload_data[:instance]%> slack and see</h4>
+      <img class="output__content" src="<%= "data:image/gif;base64,#{@upload_data[:emoji_data]}" %>">
+    <% end %>
+  </div>
+</body>

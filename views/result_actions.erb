@@ -1,0 +1,58 @@
+<div class='output__action-container'>
+  <% if !ENV['DISABLE_SLACK_UPLOAD'] %>
+  <div class='output__upload-container toggle'>
+    <form action='/uploadToSlack' enctype='multipart/form-data' method='POST'>
+      <a class='btn' title='Help' onclick='$(this).next().toggle();'><i class='fa fa-question-circle-o'></i></a>
+      <p class='toggle'>The name you'd like to call your emoji. Do not include :'s. Must be unique.</p>
+      <label for='emojiName'>Emoji Name</label>
+      <input name='emojiName' class='output__upload-field' placeholder='<%= @original_filename_slug + "_" + @action %>'>
+      <br>
+
+      <a class='btn' title='Help' onclick='$(this).next().toggle();'><i class='fa fa-question-circle-o'></i></a>
+      <p class='toggle'>Maybe you have multiple slack instances and don't want to keep digging for a user token I don't know your life</p>
+      <label for='slackSelector'>Saved Slack Creds</label>
+      <select class='slackSelector' name='slackSelector' placeholder='saved slack creds' onchange='useSelectedSlack(this)'>
+        <option value=""></option>
+      </select>
+      <br>
+
+      <a class='btn' title='Help' onclick='$(this).next().toggle();'><i class='fa fa-question-circle-o'></i></a>
+      <p class='toggle'>Where you would like to upload your emoji to. For chicago.slack.com, enter "chicago".</p>
+      <label for='slackInstance'>Slack Instance</label>
+      <input name='slackInstance' class='output__upload-field' placeholder='slack instance'>
+      <br>
+
+      <a class='btn' title='Help' onclick='$(this).next().toggle();'><i class='fa fa-question-circle-o'></i></a>
+      <p class='toggle'>A Slack user token. Available to all logged-in slack users by searching the source for "api_token", or by running the following on any *.slack.com/* page:
+        <code>
+          window.prompt("your api token is: ",/api_token: "(.*)"/.exec(document.body.innerHTML)[1])
+        </code>
+      </p>
+      <label for='slackToken'>Slack User Token</label>
+      <input name='slackToken' class='output__upload-field' placeholder='xoxp-...'>
+      <br>
+
+      <!-- hidden inputs shh -->
+      <input name='emojiData' value='<%=file%>' type='hidden'>
+      <input name='originalFilenameSlug' value='<%= @original_filename_slug %>' type='hidden'>
+      <input name='originalFilename' value='<%= @original_filename %>' type='hidden'>
+      <input name='action' value='<%= @action %>' type='hidden'>
+      <input type='submit' name='submitButton' value='Upload to Slack' onclick='saveSlackVars(this)'>
+    </form>
+  </div>
+  <% end %>
+  <div class='ouptut__action_button-container'>
+    <div>
+      <a download class='output__action-download btn' href='<%= "data:image/gif;base64,#{file}" %>' download>
+        <i class='fa fa-download'></i>
+      </a>
+    </div>
+    <% if !ENV['DISABLE_SLACK_UPLOAD'] %>
+    <div>
+    <a class='output__action-upload btn' title='Upload to Slack' onclick='$(this).parent().parent().prev().toggle();'>
+      <i class='fa fa-slack'></i>
+    </a>
+    </div>
+    <% end %>
+  </div>
+</div>
