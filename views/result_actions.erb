@@ -25,7 +25,7 @@
       <a class='btn' title='Help' onclick='$(this).next().toggle();'><i class='fa fa-question-circle-o'></i></a>
       <p class='toggle'>A Slack user token. Available to all logged-in slack users by searching the source for "api_token", or by running the following on any *.slack.com/* page:
         <code>
-          window.prompt("your api token is: ",/api_token: "(.*)"/.exec(document.body.innerHTML)[1])
+          window.prompt("your api token is: ", window.boot_data.api_token)
         </code>
       </p>
       <label for='slackToken'>Slack User Token</label>
