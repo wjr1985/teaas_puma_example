@@ -2,7 +2,11 @@ body {
   padding-top: 50px;
 }
 .starter {
-  padding: 40px 15px;
+  padding: 10px 15px;
+  text-align: center;
+}
+.alert-status {
+  padding: 5px 10px;
   text-align: center;
 }
 input[type=file] {

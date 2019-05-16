@@ -20,6 +20,23 @@ Dotenv.load
 OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
 OpenURI::Buffer.const_set 'StringMax', 0
 
+helpers do
+  def teaas_status
+    private_bucket = ENV['AWS_PRIVATE_S3_BUCKET_NAME']
+    return if private_bucket.nil?
+
+    @s3 ||= Aws::S3::Resource.new
+    bucket = @s3.bucket(private_bucket)
+
+    obj = bucket.object("status")
+    if obj.exists?
+      obj.get.body.read
+    else
+      nil
+    end
+  end
+end
+
 actions = ["appendify", "bloodify", "customoverlayer", "dealwithit", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "think", "tumbleweed", "turbo", "waitify"]
 
 actions.each do |route|
