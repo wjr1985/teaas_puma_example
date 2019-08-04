@@ -3,7 +3,7 @@
   <script src="/js/jquery.redirect.js"></script>
   <script>
     setTimeout(function() {
-      $.redirect('check_status', {'forwarded_params': <%= params.to_json %>, 'upload_filename': '<%= upload_filename %>'});
+      $.redirect('check_status', {'forwarded_params': <%= params.to_json %>, 'upload_filename': '<%= upload_filename %>', 'action': '<%= action %>'});
     }, 4000);
   </script>
   <div class='container'>

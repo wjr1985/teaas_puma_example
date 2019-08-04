@@ -87,9 +87,11 @@ post '/check_status' do
   bucket = @s3.bucket("#{ENV['AWS_S3_BUCKET_NAME']}-processed")
   filename = params[:upload_filename]
   forwarded_params = params[:forwarded_params]
+  action = params[:action]
 
   obj = bucket.object(filename)
   if obj.exists?
+    @action = action
     tempfile = Tempfile.new("transformed_image")
     obj.get(:response_target => tempfile)
     if _custom_resize?(forwarded_params)
@@ -100,12 +102,15 @@ post '/check_status' do
 
     blob_result = Teaas::Turboize::turbo_from_file(tempfile.path, resize, nil, :sample => forwarded_params['sample'])
 
+    @original_filename_slug = 'custom_emoji'
+    @original_filename = "#{@original_filename_slug}.#{_image_type(tempfile.path)}"
+
     tempfile.close
     tempfile.unlink
 
     _process_and_display_results(blob_result)
   else
-    erb :pleasewait, :locals => {:upload_filename => filename, :params => forwarded_params}
+    erb :pleasewait, :locals => {:upload_filename => filename, :params => forwarded_params, :action => action}
   end
 end
 
@@ -443,7 +448,7 @@ def _common_lambda(params, payload, upload_filename)
     :payload => payload,
   )
 
-  erb :pleasewait, :locals => {:upload_filename => upload_filename, :params => params}
+  erb :pleasewait, :locals => {:upload_filename => upload_filename, :params => params, :action => @action}
 end
 
 def _process_and_display_results(blob_result)
