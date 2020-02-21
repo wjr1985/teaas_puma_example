@@ -345,6 +345,7 @@ post '/spin' do
     options[:rotations] = params['rotations'].to_i
     options[:counterclockwise] = true if params['counterclockwise']
     options[:animate] = true if params['animate']
+    options[:force_transparency] = params['force_transparency'] || false
 
     spinned_image = Teaas::Spin.spin_from_file(img_path, options)
 
