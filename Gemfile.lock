@@ -21,7 +21,7 @@ GEM
     json_pure (1.8.3)
     multipart-post (2.0.0)
     mustermann (1.0.3)
-    puma (2.15.3)
+    puma (3.12.3)
     rack (2.0.6)
     rack-protection (2.0.4)
       rack
