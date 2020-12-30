@@ -37,7 +37,7 @@ helpers do
   end
 end
 
-actions = ["appendify", "bloodify", "customoverlayer", "dealwithit", "fireify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "think", "tumbleweed", "turbo", "waitify"]
+actions = ["appendify", "bloodify", "customoverlayer", "dealwithit", "fireify", "fireworksify", "gotify", "intensify", "magrittify", "marquee", "mirror", "noify", "parrotify", "pulse", "resize", "reverse", "shakefistify", "spin", "tearsify", "think", "tumbleweed", "turbo", "waitify"]
 
 actions.each do |route|
   get "/#{route}" do
@@ -145,6 +145,10 @@ end
 
 post '/fireify' do
   _generic_post(Teaas::Fire, "fire", params)
+end
+
+post '/fireworksify' do
+  _generic_post(Teaas::Fireworks, "fireworks", params)
 end
 
 post '/gotify' do
