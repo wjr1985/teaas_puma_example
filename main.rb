@@ -1,4 +1,5 @@
-require 'aws-sdk'
+require 'aws-sdk-s3'
+require 'aws-sdk-lambda'
 require 'base64'
 require 'dotenv'
 require 'json'

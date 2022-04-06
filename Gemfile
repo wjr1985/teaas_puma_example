@@ -1,9 +1,11 @@
 source 'https://rubygems.org'
-ruby "2.3.1"
-gem 'aws-sdk', '~> 2'
+ruby "2.7.5"
+gem 'aws-sdk-s3', '~> 1'
+gem 'aws-sdk-lambda', '~> 1'
 gem 'dotenv'
 gem 'multipart-post'
-gem 'puma'
+gem 'nokogiri'
+gem 'puma', '~> 5.6.4'
 gem 'sinatra'
 gem 'rmagick'
 gem 'teaas', :git => 'https://github.com/wjr1985/teaas.git', :ref => '05803166468b0d4c95c73d58f54c3352903f76a4'

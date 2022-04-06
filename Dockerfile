@@ -1,7 +1,7 @@
-FROM ruby:2.3.1-alpine
+FROM ruby:2.7.5-alpine
 
 RUN apk add --update \
-      imagemagick-dev \
+      imagemagick6-dev \
       git \
       build-base
 
