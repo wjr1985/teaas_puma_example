@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby "2.7.5"
+ruby "2.7.6"
 gem 'aws-sdk-s3', '~> 1'
 gem 'aws-sdk-lambda', '~> 1'
 gem 'dotenv'
